@@ -1,12 +1,17 @@
 CC = g++
 CFLAGS = -W -O2 -std=c++11
-TARGET = project1
+LDFLAGS =
+TARGET = project1 
+SRC_DIR = ./
 
-$(TARGET): project1.o
-	$(CC) $(CFLAGS) -o $(TARGET) project1.o
+SRCS = $(notdir $(wildcard $(SRC_DIR)/*.cc))
+OBJS = $(SRCS:.cc=.o)
 
-project1.o: project1.h project1.cc
-	$(CC) $(CFLAGS) -c -o project1.o project1.cc
+%.o : $(SRC_DIR)/%.cc
+	$(CC) $(CFLAGS) -c $< -o $@ -MD $(LDFLAGS)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 clean:
-	rm -rf *.o $(TARGET)
+	rm -rf *.o $(TARGET) *.d
